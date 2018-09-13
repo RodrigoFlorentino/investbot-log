@@ -255,7 +255,7 @@ var cloudant = {
 
     getLogTreinamento : function (req, res){
 
-        db = cloudantDB.db.use(dbname);
+        db = cloudantDB.use(process.env.CLOUDANT_DB);
         db.index( {name:'_id', type:'json', index:{fields:['ativo']}});
         var query = { selector: { ativo: true }};
 
