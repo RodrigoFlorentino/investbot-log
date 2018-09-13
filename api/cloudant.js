@@ -1,6 +1,6 @@
 require('dotenv-safe').load();
 
-var Cloudant = require('cloudant');
+var Cloudant = require('@cloudant/cloudant');
 var express = require('express');
 var request = require('request');
 var http = require("http");
@@ -8,27 +8,8 @@ var http = require("http");
 var app = express();
 app.set('port', process.env.PORT || 3000);
 
-var protocol = process.env.NODE_ENV == 'production' ? "https" : "http" ;
-
-var cloudant_url = process.env.CLOUDANT_URL;
-var services = JSON.parse(process.env.VCAP_SERVICES || "{}");
-var user = process.env.CLOUDANT_USER;
-var password = process.env.CLOUDANT_PASSWORD;
-
-if(process.env.VCAP_SERVICES) {
-
-    services = JSON.parse(process.env.VCAP_SERVICES);
-
-    if(services.cloudantNoSQLDB) {
-        cloudant_url = services.cloudantNoSQLDB[0].credentials.url;
-        user = services.cloudantNoSQLDB[0].credentials.username;
-        password = services.cloudantNoSQLDB[0].credentials.password;
-    }
-}
-
-var dbname = process.env.CLOUDANT_DB;
-var cloudantDB = Cloudant({url:cloudant_url, account:user, password:password});
-db = cloudantDB.db.use(dbname);
+var cloudantDB = Cloudant(process.env.CLOUDANT_URL);
+db = cloudantDB.db.use(process.env.CLOUDANT_DB);
 dbUser = cloudantDB.db.use(process.env.CLOUDANT_DBUSER);
 dbOutros = cloudantDB.db.use(process.env.CLOUDANT_DBTREINO);
 
